@@ -4,6 +4,8 @@ var { buildSchema } = require("graphql");
 // GraphQL schema
 var schema = buildSchema(`
     type Query {
+        room(id: Int!): Room
+        rooms: [Room]
         course(id: Int!): Course
         courses(topic: String): [Course]
     },
@@ -15,7 +17,25 @@ var schema = buildSchema(`
         topic: String
         url: String
     }
+    type Room {
+        id: Int
+        name: String
+        description: String
+        capacity: Int
+        price: Int
+    }
 `);
+
+var roomsData = [
+  {
+    id: 1,
+    name: "Single Room",
+    description: "Description of a single room",
+    capacity: 1,
+    price: 50
+  }
+];
+
 var coursesData = [
   {
     id: 1,
@@ -45,11 +65,22 @@ var coursesData = [
     url: "https://codingthesmartway.com/courses/understand-javascript/"
   }
 ];
+
+var getRoom = function(args) {
+  var id = args.id;
+  return roomsData.filter(room => {
+    return room.id == id;
+  })[0];
+};
+
 var getCourse = function(args) {
   var id = args.id;
   return coursesData.filter(course => {
     return course.id == id;
   })[0];
+};
+var getRooms = function() {
+  return roomsData;
 };
 var getCourses = function(args) {
   if (args.topic) {
@@ -59,9 +90,12 @@ var getCourses = function(args) {
     return coursesData;
   }
 };
+
 var root = {
   course: getCourse,
-  courses: getCourses
+  courses: getCourses,
+  room: getRoom,
+  rooms: getRooms
 };
 // Create an express server and a GraphQL endpoint
 var app = express();
