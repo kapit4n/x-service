@@ -11,6 +11,7 @@ var schema = buildSchema(`
     },
     type Mutation {
         updateCourseTopic(id: Int!, topic: String!): Course
+        updateRoom(id: Int!, room: RoomInput!): Course
     }
     type Course {
         id: Int
@@ -22,6 +23,12 @@ var schema = buildSchema(`
     }
     type Room {
         id: Int
+        name: String
+        description: String
+        capacity: Int
+        price: Int
+    }
+    input RoomInput {
         name: String
         description: String
         capacity: Int
@@ -79,6 +86,20 @@ var updateCourseTopic = function({ id, topic }) {
   return coursesData.filter(course => course.id === id)[0];
 };
 
+var updateRoom = function({ id, roomInput }) {
+  coursesData.map(room => {
+    if (room.id === id) {
+      room.name = roomInput.name;
+      room.description = roomInput.description;
+      room.capacity = roomInput.capacity;
+      room.capacity = roomInput.capacity;
+      room.price = roomInput.price;
+      return room;
+    }
+  });
+  return coursesData.filter(course => course.id === id)[0];
+};
+
 var getRoom = function(args) {
   var id = args.id;
   return roomsData.filter(room => {
@@ -109,7 +130,8 @@ var root = {
   courses: getCourses,
   room: getRoom,
   rooms: getRooms,
-  updateCourseTopic: updateCourseTopic
+  updateCourseTopic: updateCourseTopic,
+  updateRoom: updateRoom
 };
 // Create an express server and a GraphQL endpoint
 var app = express();
