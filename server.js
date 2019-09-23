@@ -4,6 +4,8 @@ var { buildSchema } = require("graphql");
 // GraphQL schema
 var schema = buildSchema(`
     type Query {
+        client(id: Int!): Client
+        clients: [Client]
         room(id: Int!): Room
         rooms: [Room]
         course(id: Int!): Course
@@ -21,6 +23,13 @@ var schema = buildSchema(`
         topic: String
         url: String
     }
+    type Client {
+        id: Int
+        name: String
+    }
+    input ClientInput {
+      name: String
+    }
     type Room {
         id: Int
         name: String
@@ -35,6 +44,17 @@ var schema = buildSchema(`
         price: Int
     }
 `);
+
+var clientsData = [
+  {
+    id: 1,
+    name: "Luis Arce",
+  },
+  {
+    id: 2,
+    name: "Hansel Arce",
+  },
+];
 
 var roomsData = [
   {
@@ -86,22 +106,36 @@ var updateCourseTopic = function({ id, topic }) {
   return coursesData.filter(course => course.id === id)[0];
 };
 
+var updateClient = function({ id, client }) {
+  clientsData = clientsData.map(c => {
+    if (c.id === id) {
+      c.name = client.name;
+      c.description = client.description;
+      c.capacity = client.capacity;
+      c.price = client.price;
+    }
+    return c;
+  });
+  return clientsData.filter(c => c.id === id)[0];
+};
+
 var updateRoom = function({ id, room }) {
-  console.log("0LLLLLLLLLLLLLLLLLLLLLLLL")
-  console.log(id)
-  console.log(room)
-  roomsData.map(room => {
-    console.log("1LLLLLLLLLLLLLLLLLLLLLLLL")
-    if (room.id === id) {
-      console.log("2LLLLLLLLLLLLLLLLLLLLLLLL")
-      room.name = room.name;
-      room.description = room.description;
-      room.capacity = room.capacity;
-      room.price = room.price;
+  roomsData = roomsData.map(r => {
+    if (r.id === id) {
+      r.name = room.name;
+      r.description = room.description;
+      r.capacity = room.capacity;
+      r.price = room.price;
+      return r;
     }
   });
-  console.log("LLLLLLLLLLLLLLLLLLLLLLLL")
   return roomsData.filter(r => r.id === id)[0];
+};
+
+var getClient = function({ id }) {
+  return clientsData.filter(d => {
+    return d.id == id;
+  })[0];
 };
 
 var getRoom = function(args) {
@@ -117,6 +151,12 @@ var getCourse = function(args) {
     return course.id == id;
   })[0];
 };
+
+
+var getClients = function() {
+  return clientsData;
+};
+
 var getRooms = function() {
   return roomsData;
 };
@@ -132,6 +172,8 @@ var getCourses = function(args) {
 var root = {
   course: getCourse,
   courses: getCourses,
+  client: getClient,
+  clients: getClients,
   room: getRoom,
   rooms: getRooms,
   updateCourseTopic: updateCourseTopic,
