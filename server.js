@@ -10,10 +10,11 @@ var schema = buildSchema(`
         rooms: [Room]
         course(id: Int!): Course
         courses(topic: String): [Course]
-    },
+    }
     type Mutation {
         updateCourseTopic(id: Int!, topic: String!): Course
         updateRoom(id: Int!, room: RoomInput!): Room
+        updateClient(id: Int!, client: ClientInput!): Client
     }
     type Course {
         id: Int
@@ -177,6 +178,7 @@ var root = {
   room: getRoom,
   rooms: getRooms,
   updateCourseTopic: updateCourseTopic,
+  updateClient: updateClient,
   updateRoom: updateRoom
 };
 // Create an express server and a GraphQL endpoint
