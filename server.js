@@ -11,7 +11,7 @@ var schema = buildSchema(`
     },
     type Mutation {
         updateCourseTopic(id: Int!, topic: String!): Course
-        updateRoom(id: Int!, room: RoomInput!): Course
+        updateRoom(id: Int!, room: RoomInput!): Room
     }
     type Course {
         id: Int
@@ -86,18 +86,22 @@ var updateCourseTopic = function({ id, topic }) {
   return coursesData.filter(course => course.id === id)[0];
 };
 
-var updateRoom = function({ id, roomInput }) {
-  coursesData.map(room => {
+var updateRoom = function({ id, room }) {
+  console.log("0LLLLLLLLLLLLLLLLLLLLLLLL")
+  console.log(id)
+  console.log(room)
+  roomsData.map(room => {
+    console.log("1LLLLLLLLLLLLLLLLLLLLLLLL")
     if (room.id === id) {
-      room.name = roomInput.name;
-      room.description = roomInput.description;
-      room.capacity = roomInput.capacity;
-      room.capacity = roomInput.capacity;
-      room.price = roomInput.price;
-      return room;
+      console.log("2LLLLLLLLLLLLLLLLLLLLLLLL")
+      room.name = room.name;
+      room.description = room.description;
+      room.capacity = room.capacity;
+      room.price = room.price;
     }
   });
-  return coursesData.filter(course => course.id === id)[0];
+  console.log("LLLLLLLLLLLLLLLLLLLLLLLL")
+  return roomsData.filter(r => r.id === id)[0];
 };
 
 var getRoom = function(args) {
